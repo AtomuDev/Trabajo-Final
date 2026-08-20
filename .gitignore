@@ -1,0 +1,30 @@
+# ==== Backend: Java / Maven / Spring Boot ====
+backend/target/
+backend/.mvn/
+backend/*.class
+backend/application-local.properties
+*.jar
+*.war
+*.class
+HELP.md
+
+# ==== Frontend: Node / React / Vite ====
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ==== IDE ====
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# ==== Variables de entorno / secretos ====
+.env
+.env.*
+!.env.example
