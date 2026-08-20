@@ -162,6 +162,6 @@ Proyecto en etapa de **1.ª Entrega — Propuesta de Proyecto y Repositorio** (p
 
 Proyecto desarrollado por un equipo de 3 estudiantes de la Tecnicatura Universitaria en Programación (UTN) como Trabajo Final Integrador.
 
-- Backend: *(completar)*
-- Frontend: *(completar)*
-- *(completar roles restantes)*
+- Abel Tomas Romero
+- Nahuel Romero
+- Gastón Zarate
