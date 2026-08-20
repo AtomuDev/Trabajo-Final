@@ -4,8 +4,6 @@ Sistema de gestión de turnos, pacientes y cobros para centros de kinesiología.
 
 Trabajo Final Integrador — Tecnicatura Universitaria en Programación (UTN), a distancia.
 
-**Repositorio:** https://github.com/AtomuDev/Trabajo-Final
-
 ---
 
 ## 📋 1. Problema y Justificación
