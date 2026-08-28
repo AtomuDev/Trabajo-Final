@@ -94,7 +94,7 @@ Detalle completo en [`docs/02-requerimientos.md`](docs/02-requerimientos.md).
 - Módulo de autenticación con roles
 - Agenda con reglas configurables
 - Ficha médica dinámica y consentimientos versionados
-- Cobros con registro manual de señas y pagos
+- Integración con pasarela de pago real como Mercado Pago
 - Reportes con estadísticas básicas
 - Notificaciones automáticas por email
 - Documentación técnica completa
@@ -102,7 +102,6 @@ Detalle completo en [`docs/02-requerimientos.md`](docs/02-requerimientos.md).
 ### Exclusiones
 
 - Aplicación móvil nativa (el sistema es web responsive)
-- Integración con pasarela de pago real (Mercado Pago u otra) — el registro es manual en esta versión
 - Integración con WhatsApp Business API — queda como mejora futura (roadmap v2)
 - Soporte multi-tenant — arquitectura single-tenant, un único centro por instancia
 - Mantenimiento evolutivo posterior a la entrega del TFI
