@@ -114,6 +114,20 @@ Detalle completo en [`docs/02-requerimientos.md`](docs/02-requerimientos.md).
 - **Temporal:** desarrollo enmarcado en el cronograma académico, con entregas parciales el 30/08 y el 27/09.
 - **Datos de prueba:** se validará con datos de prueba y, de ser posible, con el caso real del centro de referencia. No se garantiza migración de datos históricos del sistema actual (fuente no confiable por sus fallas conocidas).
 
+### MVP
+
+Para la primera entrega se definió un MVP acotado al módulo de Agenda / Turnos, priorizando las funcionalidades indispensables para cumplir el objetivo core del sistema. El resto de los módulos (cobros, ficha médica, consentimientos, notificaciones, reportes, etc.) se desarrollan en etapas posteriores. Las funcionalidades incluidas en el MVP son:
+
+- Ver disponibilidad y reservar un turno sin seña (cliente, sin cuenta, identificado por DNI)
+- Vista básica del panel de Administrador (Agenda, Clientes)
+- Calendario visual de turnos para el admin/profesional (ver turnos del día/semana)
+- Reserva manual por parte del admin/profesional
+- Bloqueo de horarios por parte del profesional (descansos, no disponibilidad)
+
+### Fuera del MVP (planificado para una etapa posterior)
+
+- Integración con Mercado Pago para la validación automática del pago de la seña. Si bien forma parte del alcance del proyecto, no es indispensable para la primera versión funcional de la agenda, por lo que queda planificada para una etapa posterior dentro del mismo desarrollo.
+
 ---
 
 ## 🏗️ 7. Stack Tecnológico
