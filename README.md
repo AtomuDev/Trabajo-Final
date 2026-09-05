@@ -94,7 +94,6 @@ Detalle completo en [`docs/02-requerimientos.md`](docs/02-requerimientos.md).
 - Módulo de autenticación con roles
 - Agenda con reglas configurables
 - Ficha médica dinámica y consentimientos versionados
-- Integración con pasarela de pago real como Mercado Pago
 - Reportes con estadísticas básicas
 - Notificaciones automáticas por email
 - Documentación técnica completa
