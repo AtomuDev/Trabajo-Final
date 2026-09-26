@@ -146,7 +146,10 @@ Para la primera entrega se definió un MVP acotado al módulo de Agenda / Turnos
 
 ## 🗄️ 8. Modelo de Datos
 
-El esquema de base de datos (tablas, atributos, tipos y relaciones) se presentará en la **2.ª Entrega — Diseño y Módulos** (27/09), junto con el listado definitivo de módulos, ambos sujetos a aprobación previa del tutor.
+El esquema de base de datos está compuesto por 12 tablas relacionales en PostgreSQL, con las decisiones de diseño justificadas (patrón EAV para la ficha médica dinámica, versionado de consentimientos, disponibilidad horaria configurable por profesional, entre otras).
+
+- Detalle completo de tablas, tipos de datos e índices: [`database/tablas.md`](database/tablas.md)
+- Diagrama entidad-relación: [`database/erd.md`](database/erd.md)
 
 ---
 
@@ -158,15 +161,18 @@ Trabajo-Final/
 ├── docs/                  → documentación de gestión y diseño del proyecto
 │   ├── 01-propuesta.md
 │   ├── 02-requerimientos.md
-│   └── 03-modulos.md
-│   (el modelo de datos y ERD se suman en la 2.ª Entrega)
-├── backend/                → API REST en Spring Boot (Java)
+│   ├── 03-modulos.md
+│   └── 04-arquitectura.md
+├── database/               → esquema de base de datos
+│   ├── tablas.md
+│   └── erd.md
+├── backend/                → API REST en Spring Boot (Java/Gradle)
 └── frontend/                → SPA en React + TypeScript
 ```
 
 ## 🚧 Estado actual
 
-Proyecto en etapa de **1.ª Entrega — Propuesta de Proyecto y Repositorio** (propuesta, alcance, stack y estructura del repositorio). El esquema de base de datos y el listado definitivo de módulos se presentarán en la 2.ª Entrega (27/09), sujetos a aprobación previa del tutor. La implementación de backend y frontend comienza una vez aprobada esa instancia.
+Proyecto en etapa de **2.ª Entrega — Diseño y Módulos**: esquema de base de datos, listado definitivo de módulos con prioridad, documento de arquitectura, y estructura base del backend (Spring Boot + Gradle) ya subidos al repositorio. Frontend en desarrollo.
 
 ## 👨‍💻 Equipo
 
