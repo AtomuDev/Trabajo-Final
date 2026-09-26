@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     USUARIO ||--o{ TURNO : "atiende"
     USUARIO ||--o{ FICHA_MEDICA_RESPUESTA : "modifica"
@@ -135,3 +136,4 @@ erDiagram
         boolean permite_reagenda
         int plazo_cancelacion_horas
     }
+```
