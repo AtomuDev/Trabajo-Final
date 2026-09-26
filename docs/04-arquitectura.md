@@ -4,20 +4,21 @@
 
 El backend se organiza en capas horizontales con responsabilidades separadas, siguiendo el patrón estándar de Spring Boot:
 
+```
 Cliente (React SPA)
-│
-▼
-┌─────────────────────┐
-│ Controller │ → recibe requests HTTP, valida entrada, devuelve respuestas
-├─────────────────────┤
-│ Service │ → lógica de negocio (reglas de agenda, validación de ficha
-│ │ médica, cálculo de estado de cuenta, etc.)
-├─────────────────────┤
-│ Repository │ → acceso a datos (Spring Data JPA), sin lógica de negocio
-├─────────────────────┤
-│ PostgreSQL │ → persistencia
-└─────────────────────┘
-
+       |
+       v
++---------------------+
+|     Controller       |  -> recibe requests HTTP, valida entrada, devuelve respuestas
++---------------------+
+|      Service          |  -> logica de negocio (reglas de agenda, validacion de ficha
+|                       |     medica, calculo de estado de cuenta, etc.)
++---------------------+
+|     Repository        |  -> acceso a datos (Spring Data JPA), sin logica de negocio
++---------------------+
+|     PostgreSQL         |  -> persistencia
++---------------------+
+```
 
 ### Por qué esta arquitectura y no otra
 
@@ -27,29 +28,30 @@ Cliente (React SPA)
 
 ### Estructura de paquetes (backend)
 
+```
 backend/
-├── build.gradle → dependencias y plugins
-├── settings.gradle
-├── gradlew / gradlew.bat
-└── src/
-├── main/
-│ ├── java/com/electrofit/backend/
-│ │ ├── config/ → configuración de Security, JWT, CORS, OpenAPI/Swagger
-│ │ ├── security/ → JWT service, filtro de autenticación, user details
-│ │ ├── controller/ → controladores REST, uno por módulo (AgendaController, PacienteController, etc.)
-│ │ ├── service/ → lógica de negocio por módulo
-│ │ ├── repository/ → interfaces Spring Data JPA, una por entidad
-│ │ ├── model/ → las 12 entidades JPA del modelo de datos (Usuario, Paciente, Turno, etc.)
-│ │ ├── dto/
-│ │ │ ├── request/ → objetos de entrada (lo que el cliente envía)
-│ │ │ └── response/ → objetos de salida (lo que el backend devuelve)
-│ │ ├── enums/ → Rol, EstadoTurno, EstadoCobro, TipoDato, etc. (reflejan los VARCHAR con valores fijos del modelo de datos)
-│ │ ├── exception/ → manejo global de excepciones (@ControllerAdvice)
-│ │ └── BackendApplication.java
-│ └── resources/
-│ └── application.properties
-└── test/java/com/electrofit/backend/
-
+  build.gradle              -> dependencias y plugins
+  settings.gradle
+  gradlew / gradlew.bat
+  src/
+    main/
+      java/com/electrofit/backend/
+        config/        -> configuracion de Security, JWT, CORS, OpenAPI/Swagger
+        security/      -> JWT service, filtro de autenticacion, user details
+        controller/    -> controladores REST, uno por modulo (AgendaController, PacienteController, etc.)
+        service/       -> logica de negocio por modulo
+        repository/    -> interfaces Spring Data JPA, una por entidad
+        model/         -> las 12 entidades JPA del modelo de datos (Usuario, Paciente, Turno, etc.)
+        dto/
+          request/     -> objetos de entrada (lo que el cliente envia)
+          response/    -> objetos de salida (lo que el backend devuelve)
+        enums/         -> Rol, EstadoTurno, EstadoCobro, TipoDato, etc.
+        exception/     -> manejo global de excepciones (@ControllerAdvice)
+        BackendApplication.java
+      resources/
+        application.properties
+    test/java/com/electrofit/backend/
+```
 
 **Por qué separamos `config/` de `security/`:** `config/` agrupa configuración transversal de la aplicación (CORS, Swagger, beans generales), mientras que `security/` concentra específicamente la lógica de autenticación y autorización (el filtro JWT, la generación/validación de tokens, la carga de usuarios). Separarlos evita que un paquete termine mezclando dos responsabilidades distintas.
 
