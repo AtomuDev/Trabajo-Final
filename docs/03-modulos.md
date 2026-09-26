@@ -1,76 +1,104 @@
-# Módulos, Navegación y Stack — ElectroFit
+# Módulos Funcionales — ElectroFit
 
-## Módulos y Funcionalidades Principales
+Los módulos están enumerados en el orden en que conviene construirlos: cada uno depende de que el anterior ya esté funcionando. Esto no es necesariamente el orden en que se le presenta al usuario final, sino el orden de desarrollo.
 
-### 1. Módulo de Agenda/Turnos
-- Calendario visual (día/semana/mes) con turnos, disponibilidad y bloqueos
-- Reserva de turno público (sin cuenta) desde landing o vía link de Google Maps
-- Reserva manual por admin/profesional
-- Reglas configurables: antelación mínima, sobreagendamiento sí/no, frecuencia máxima por DNI
-- Cancelación/reagenda vía token del cliente
+## Resumen
 
-### 2. Módulo de Servicios
-- ABM de tipos de servicio (nombre, duración, precio, descripción)
-- Asociación de servicio a turno
+| # | Módulo | Prioridad | Depende de |
+|---|---|---|---|
+| 1 | Autenticación | Alta | — |
+| 2 | Servicios | Alta | Autenticación |
+| 3 | Administración / Configuración | Alta | Autenticación |
+| 4 | Clientes / Pacientes | Alta | Administración / Configuración |
+| 5 | Agenda / Turnos | Alta | Servicios, Administración/Configuración, Clientes/Pacientes |
+| 6 | Cobros / Cuentas | Media | Agenda / Turnos |
+| 7 | Notificaciones | Baja | Agenda / Turnos |
+| 8 | Reportes | Baja | Agenda / Turnos, Cobros / Cuentas |
 
-### 3. Módulo de Clientes/Pacientes
-- Ficha con datos personales + DNI
-- Ficha médica configurable (el admin define qué campos pedir, el profesional puede editarla)
-- Consentimientos (versionados, configurables por admin)
-- Historial de turnos y estado (activo/inactivo)
+---
 
-### 4. Módulo de Cobros/Cuentas
-- Registro de seña y pago
-- Estado de cuenta por cliente (saldado / pendiente)
-- Vinculado a cada turno/servicio
-- Acceso exclusivo del rol Administrador
+## 1. Autenticación
+**Descripción funcional:** login con email/password para Admin y Profesional (JWT), middleware de autorización por rol en cada endpoint. No hay registro público — los usuarios los crea el propio Admin desde su panel.
 
-### 5. Módulo de Reportes
-- Estadísticas de ventas, turnos por mes, ocupación, etc.
+**Prioridad:** Alta — bloqueante, todo el resto del sistema depende de saber quién opera y con qué rol.
 
-### 6. Módulo de Administración/Configuración
-- Personalización de la landing pública (info del local, actividades, ubicación)
-- Configuración de reglas de agenda (antelación, frecuencia, etc.)
-- Configuración de campos de ficha médica y consentimientos
+**Depende de:** —
 
-### 7. Módulo de Autenticación
-- Login con rol (admin / profesional)
+**Roles que lo usan:** Administrador, Profesional
 
-### 8. Módulo de Notificaciones
-- MVP: Email automático (vía SendGrid o similar) en: confirmación de turno (con link+token), recordatorio previo, aviso de cancelación/reagenda, aviso de saldo pendiente
-- Roadmap/v2: Integración WhatsApp Business API para los mismos eventos
+---
 
-> **Por qué lo pensamos así:** cada módulo mapea a una necesidad puntual que surgió del relevamiento con el centro de referencia (agenda desordenada → módulo agenda con reglas; falta de control de pagos → módulo cobros; admisión sin filtro → ficha médica). Notificaciones queda como módulo aparte porque involucra un servicio externo (SendGrid) distinto al resto del sistema. WhatsApp se deja para una v2 porque requiere aprobación de Meta o un servicio pago tipo Twilio — el email cumple la misma función a costo cero y sin fricción de aprobación, algo razonable para el alcance de un TFI.
+## 2. Servicios
+**Descripción funcional:** ABM de tipos de servicio (nombre, duración en minutos, precio, activo/inactivo). Es la entidad base que consume Agenda/Turnos y Administración/Configuración (reglas de agenda por servicio).
 
-## Mapa de Navegación / Pantallas
+**Prioridad:** Alta — sin servicios definidos no se puede crear ningún turno.
 
-**Público (sin login):**
-- `/` → Landing (info del local, actividades, ubicación)
-- `/reservar` → Wizard de reserva (servicio → disponibilidad → DNI → datos/ficha → seña → confirmación)
-- `/turno/:token` → Detalle del turno (cancelar / info)
+**Depende de:** Autenticación (solo Admin accede)
 
-**Admin/Profesional (con login):**
-- `/login`
-- `/dashboard` → resumen del día
-- `/agenda` → calendario (admin: todos los profesionales / profesional: solo el suyo)
-- `/ventas` → listado de reservas + configuración de reglas *(solo admin)*
-- `/clientes` → listado + ficha de cada paciente *(admin: lectura/escritura — profesional: lectura y escritura solo en ficha médica)*
-- `/reportes` → métricas *(solo admin)*
-- `/administracion` → config landing, ficha médica, consentimientos *(solo admin)*
+**Roles que lo usan:** Administrador
 
-> **Por qué lo pensamos así:** separamos las rutas públicas de las privadas porque tienen audiencias y necesidades de seguridad distintas — las públicas no requieren autenticación y deben ser livianas para no perder al cliente que llega desde Maps; las privadas requieren rol validado en cada request. Este mapeo sirve directo como base para las rutas de React Router en el frontend.
+---
 
-## Stack Tecnológico
+## 3. Administración / Configuración
+**Descripción funcional:** ABM de campos de ficha médica dinámica (con sus opciones si son de tipo Opción Múltiple), ABM de consentimientos (el texto legal, versionado automático al editar), ABM de reglas de agenda (antelación mínima, frecuencia por DNI, sobreagendamiento — global o por servicio), y disponibilidad horaria configurable por profesional.
 
-| Capa | Tecnología | Justificación |
-|---|---|---|
-| Backend | Spring Boot (Java) | Framework robusto, tipado fuerte, ecosistema maduro para reglas de negocio complejas (validaciones, roles) |
-| Base de datos | PostgreSQL | Relacional, soporta JSONB (clave para ficha médica con campos dinámicos), robusto para datos sensibles |
-| ORM | Spring Data JPA / Hibernate | Estándar de facto con Spring Boot |
-| Frontend | React + TypeScript | SPA con estado complejo (wizard, calendario), tipado seguro |
-| Autenticación | Spring Security + JWT | Roles (admin/profesional), stateless, apto para SPA |
-| Notificaciones | Email vía SendGrid (o similar SMTP) | MVP simple y gratuito/económico |
-| Documentación API | Swagger / OpenAPI | Estándar ya usado en trabajos anteriores |
-| Control de versiones | Git + GitHub | Trabajo en equipo, historial de cambios |
+**Prioridad:** Alta — define las reglas que todos los módulos siguientes van a consumir; sin esto, Pacientes y Agenda no tienen qué mostrar ni qué validar.
 
-> **Por qué lo pensamos así:** Spring Boot + PostgreSQL es el stack que el equipo ya venía trabajando, con experiencia previa comprobada. React + TypeScript se justifica porque el sistema tiene bastante interactividad real (calendario, wizard de reserva multi-paso, formularios dinámicos de ficha médica) — justo donde una SPA rinde mejor que un enfoque server-rendered. Al ser el trabajo final para recibirse, también tiene sentido mostrar dominio de un stack moderno y desacoplado en vez de achicar el alcance.
+**Depende de:** Autenticación
+
+**Roles que lo usan:** Administrador
+
+---
+
+## 4. Clientes / Pacientes
+**Descripción funcional:** alta de paciente por DNI (sin necesidad de cuenta), completar la ficha médica dinámica (renderizada según los campos definidos en Administración), firma del consentimiento vigente (guarda la versión firmada), vista de historial del paciente, y marcado de "requiere renovación de ficha" por parte de Admin/Profesional.
+
+**Prioridad:** Alta — la Agenda necesita validar que el paciente tenga ficha médica y consentimiento al día antes de reservar.
+
+**Depende de:** Administración / Configuración (usa los campos y el consentimiento ya definidos)
+
+**Roles que lo usan:** Administrador, Profesional, Cliente/Paciente
+
+---
+
+## 5. Agenda / Turnos
+**Descripción funcional:** calendario visual (vista completa para Admin, vista acotada a lo propio para Profesional), reserva pública sin login (identificación por DNI, validación de ficha médica/consentimiento pendiente, aplicación de reglas de antelación/frecuencia según disponibilidad del profesional), reserva manual por Admin/Profesional, cancelación y reagenda vía link con token único, y cambios de estado del turno (Pendiente → Confirmado → Completado / Cancelado).
+
+**Prioridad:** Alta — es el módulo core del sistema, el que resuelve el problema principal planteado en la propuesta.
+
+**Depende de:** Servicios, Administración/Configuración, Clientes/Pacientes
+
+**Roles que lo usan:** Administrador, Profesional, Cliente/Paciente
+
+---
+
+## 6. Cobros / Cuentas
+**Descripción funcional:** registro de seña o pago completo asociado a un turno (exclusivo Admin), estado de cuenta por paciente (precio del servicio vs. pagos confirmados), historial de pagos por paciente.
+
+**Prioridad:** Media — importante para el alcance del proyecto, pero el flujo de reserva y agenda puede probarse de punta a punta sin este módulo activo.
+
+**Depende de:** Agenda / Turnos (un pago siempre está atado a un turno ya creado)
+
+**Roles que lo usan:** Administrador
+
+---
+
+## 7. Notificaciones
+**Descripción funcional:** email automático al confirmar una reserva (con el link/token de gestión), email de recordatorio antes del turno, y email al cancelar o reagendar.
+
+**Prioridad:** Baja — mejora la experiencia y reduce ausentismo, pero el sistema funciona operativamente sin notificaciones automáticas (se podría avisar manualmente en una primera versión).
+
+**Depende de:** Agenda / Turnos (necesita eventos reales sobre los que enganchar el envío)
+
+**Roles que lo usan:** Cliente/Paciente (receptor), Administrador (configuración de plantillas si aplica)
+
+---
+
+## 8. Reportes
+**Descripción funcional:** estadísticas de turnos por período y estado, ocupación por profesional/servicio, ventas totales y señas pendientes de cobro.
+
+**Prioridad:** Baja — es el módulo más postergable si el tiempo de desarrollo se acorta, ya que necesita que Agenda y Cobros ya tengan datos reales para tener sentido.
+
+**Depende de:** Agenda / Turnos, Cobros / Cuentas
+
+**Roles que lo usan:** Administrador
